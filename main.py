@@ -2,6 +2,9 @@ from utils import *
 
 myGrid = '..3.2.6..9..3.5..1..18.64....81.29..7.......8..67.82....26.95..8..2.3..9..5.1.3..'
 
+#Harder Sudoku
+grid2 = '4.....8.5.3..........7......2.....6.....8.4......1.......6.3.7.5..2.....1.4......'
+
 def grid_values(grid):
 
     values = []
@@ -48,8 +51,25 @@ def reduce_puzzle(values):
             return False
     return values
 
+def search(values):
+    values = reduce_puzzle(values)
+    if values is False:
+        return False #
+    if all(len(values[s]) == 1 for s in boxes):
+        return values
+    n,s = min((len(values[s]), s) for s in boxes if len(values[s]) > 1)
+    for value in values[s]:
+        new_sudoku = values.copy()
+        new_sudoku[s] = value
+        attempt = search(new_sudoku)
+        if attempt:
+            return attempt
+
 # print(eliminate(grid_values(myGrid)))
 # only_choice(eliminate(grid_values(myGrid)))
-display(eliminate(grid_values(myGrid)))
-print()
-display(reduce_puzzle(grid_values(myGrid)))
+# display(eliminate(grid_values(myGrid)))
+print('My Sudoku\n')
+display(search(grid_values(myGrid)))
+print('\n')
+print('Harder Sudoku\n')
+display(search(grid_values(grid2)))
